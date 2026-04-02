@@ -8,6 +8,8 @@ import {
   Scripts,
 } from '@tanstack/react-router'
 
+import '../app.css'
+
 export const Route = createRootRoute({
   notFoundComponent: () => <p>404 - Page Not Found</p>,
   head: () => ({

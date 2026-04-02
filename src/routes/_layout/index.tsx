@@ -5,5 +5,5 @@ export const Route = createFileRoute('/_layout/')({
 })
 
 function RouteComponent() {
-  return <div>Top Page</div>
+  return <div className="text-red-500 font-bold text-2xl">Top Page</div>
 }
