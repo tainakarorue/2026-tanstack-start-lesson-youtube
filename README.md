@@ -14,3 +14,7 @@ RLにアクセスした際に汎用の <p>Not
 
 root.tsx に notFoundComponent  
  を追加（推奨）
+
+## tRPCインストールコマンド
+
+npm install @trpc/server @trpc/client @trpc/tanstack-react-query @tanstack/react-query
