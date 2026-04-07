@@ -18,3 +18,41 @@ root.tsx に notFoundComponent
 ## tRPCインストールコマンド
 
 npm install @trpc/server @trpc/client @trpc/tanstack-react-query @tanstack/react-query
+
+## Drizzleインストールコマンド
+
+npm install drizzle-orm @neondatabase/serverless
+npm install -D drizzle-kit
+
+## Git ワークフロー
+
+### PRマージ前に誤って次の作業を始めてしまった場合
+
+1. **変更を一時退避**
+
+   ```bash
+   git stash
+   ```
+
+2. **GitHub で PR をマージ**（Confirm merge ボタンを押す）
+
+3. **ローカルの main を最新化**
+
+   ```bash
+   git checkout main
+   git pull
+   ```
+
+4. **新しいブランチを作成して変更を復元**
+
+   ```bash
+   git checkout -b 18-新しいブランチ名
+   git stash pop
+   ```
+
+5. **作業完了後、コミット → プッシュ → PR作成**
+   ```bash
+   git add .
+   git commit -m "コミットメッセージ"
+   git push -u origin 18-新しいブランチ名
+   ```
