@@ -24,6 +24,24 @@ npm install @trpc/server @trpc/client @trpc/tanstack-react-query @tanstack/react
 npm install drizzle-orm @neondatabase/serverless
 npm install -D drizzle-kit
 
+## `@unpic/react`（最も Next.js の Image に近い）
+
+```bash
+npm install @unpic/react
+```
+
+```tsx
+import { Image } from '@unpic/react'
+
+;<Image
+  src="/images/logo.png"
+  width={800}
+  height={600}
+  alt="Logo"
+  priority // LCP画像に使用
+/>
+```
+
 ## Git ワークフロー
 
 ### PRマージ前に誤って次の作業を始めてしまった場合

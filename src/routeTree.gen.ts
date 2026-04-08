@@ -12,11 +12,13 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as LayoutRouteImport } from './routes/_layout'
 import { Route as LayoutIndexRouteImport } from './routes/_layout/index'
 import { Route as LayoutAboutRouteImport } from './routes/_layout/about'
+import { Route as LayoutPublicRouteImport } from './routes/_layout/_public'
+import { Route as LayoutProtectedRouteImport } from './routes/_layout/_protected'
 import { Route as ApiTrpcSplatRouteImport } from './routes/api/trpc.$'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth.$'
-import { Route as LayoutPostsPostIdRouteImport } from './routes/_layout/posts/$postId'
 import { Route as LayoutPublicSignUpRouteImport } from './routes/_layout/_public/sign-up'
 import { Route as LayoutPublicSignInRouteImport } from './routes/_layout/_public/sign-in'
+import { Route as LayoutProtectedPostsPostIdRouteImport } from './routes/_layout/_protected/posts/$postId'
 
 const LayoutRoute = LayoutRouteImport.update({
   id: '/_layout',
@@ -32,6 +34,14 @@ const LayoutAboutRoute = LayoutAboutRouteImport.update({
   path: '/about',
   getParentRoute: () => LayoutRoute,
 } as any)
+const LayoutPublicRoute = LayoutPublicRouteImport.update({
+  id: '/_public',
+  getParentRoute: () => LayoutRoute,
+} as any)
+const LayoutProtectedRoute = LayoutProtectedRouteImport.update({
+  id: '/_protected',
+  getParentRoute: () => LayoutRoute,
+} as any)
 const ApiTrpcSplatRoute = ApiTrpcSplatRouteImport.update({
   id: '/api/trpc/$',
   path: '/api/trpc/$',
@@ -42,50 +52,53 @@ const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   path: '/api/auth/$',
   getParentRoute: () => rootRouteImport,
 } as any)
-const LayoutPostsPostIdRoute = LayoutPostsPostIdRouteImport.update({
-  id: '/posts/$postId',
-  path: '/posts/$postId',
-  getParentRoute: () => LayoutRoute,
-} as any)
 const LayoutPublicSignUpRoute = LayoutPublicSignUpRouteImport.update({
-  id: '/_public/sign-up',
+  id: '/sign-up',
   path: '/sign-up',
-  getParentRoute: () => LayoutRoute,
+  getParentRoute: () => LayoutPublicRoute,
 } as any)
 const LayoutPublicSignInRoute = LayoutPublicSignInRouteImport.update({
-  id: '/_public/sign-in',
+  id: '/sign-in',
   path: '/sign-in',
-  getParentRoute: () => LayoutRoute,
+  getParentRoute: () => LayoutPublicRoute,
 } as any)
+const LayoutProtectedPostsPostIdRoute =
+  LayoutProtectedPostsPostIdRouteImport.update({
+    id: '/posts/$postId',
+    path: '/posts/$postId',
+    getParentRoute: () => LayoutProtectedRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof LayoutIndexRoute
   '/about': typeof LayoutAboutRoute
   '/sign-in': typeof LayoutPublicSignInRoute
   '/sign-up': typeof LayoutPublicSignUpRoute
-  '/posts/$postId': typeof LayoutPostsPostIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/trpc/$': typeof ApiTrpcSplatRoute
+  '/posts/$postId': typeof LayoutProtectedPostsPostIdRoute
 }
 export interface FileRoutesByTo {
-  '/about': typeof LayoutAboutRoute
   '/': typeof LayoutIndexRoute
+  '/about': typeof LayoutAboutRoute
   '/sign-in': typeof LayoutPublicSignInRoute
   '/sign-up': typeof LayoutPublicSignUpRoute
-  '/posts/$postId': typeof LayoutPostsPostIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/trpc/$': typeof ApiTrpcSplatRoute
+  '/posts/$postId': typeof LayoutProtectedPostsPostIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_layout': typeof LayoutRouteWithChildren
+  '/_layout/_protected': typeof LayoutProtectedRouteWithChildren
+  '/_layout/_public': typeof LayoutPublicRouteWithChildren
   '/_layout/about': typeof LayoutAboutRoute
   '/_layout/': typeof LayoutIndexRoute
   '/_layout/_public/sign-in': typeof LayoutPublicSignInRoute
   '/_layout/_public/sign-up': typeof LayoutPublicSignUpRoute
-  '/_layout/posts/$postId': typeof LayoutPostsPostIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/trpc/$': typeof ApiTrpcSplatRoute
+  '/_layout/_protected/posts/$postId': typeof LayoutProtectedPostsPostIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -94,28 +107,30 @@ export interface FileRouteTypes {
     | '/about'
     | '/sign-in'
     | '/sign-up'
-    | '/posts/$postId'
     | '/api/auth/$'
     | '/api/trpc/$'
+    | '/posts/$postId'
   fileRoutesByTo: FileRoutesByTo
   to:
-    | '/about'
     | '/'
+    | '/about'
     | '/sign-in'
     | '/sign-up'
-    | '/posts/$postId'
     | '/api/auth/$'
     | '/api/trpc/$'
+    | '/posts/$postId'
   id:
     | '__root__'
     | '/_layout'
+    | '/_layout/_protected'
+    | '/_layout/_public'
     | '/_layout/about'
     | '/_layout/'
     | '/_layout/_public/sign-in'
     | '/_layout/_public/sign-up'
-    | '/_layout/posts/$postId'
     | '/api/auth/$'
     | '/api/trpc/$'
+    | '/_layout/_protected/posts/$postId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -147,6 +162,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LayoutAboutRouteImport
       parentRoute: typeof LayoutRoute
     }
+    '/_layout/_public': {
+      id: '/_layout/_public'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof LayoutPublicRouteImport
+      parentRoute: typeof LayoutRoute
+    }
+    '/_layout/_protected': {
+      id: '/_layout/_protected'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof LayoutProtectedRouteImport
+      parentRoute: typeof LayoutRoute
+    }
     '/api/trpc/$': {
       id: '/api/trpc/$'
       path: '/api/trpc/$'
@@ -161,44 +190,68 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiAuthSplatRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_layout/posts/$postId': {
-      id: '/_layout/posts/$postId'
-      path: '/posts/$postId'
-      fullPath: '/posts/$postId'
-      preLoaderRoute: typeof LayoutPostsPostIdRouteImport
-      parentRoute: typeof LayoutRoute
-    }
     '/_layout/_public/sign-up': {
       id: '/_layout/_public/sign-up'
       path: '/sign-up'
       fullPath: '/sign-up'
       preLoaderRoute: typeof LayoutPublicSignUpRouteImport
-      parentRoute: typeof LayoutRoute
+      parentRoute: typeof LayoutPublicRoute
     }
     '/_layout/_public/sign-in': {
       id: '/_layout/_public/sign-in'
       path: '/sign-in'
       fullPath: '/sign-in'
       preLoaderRoute: typeof LayoutPublicSignInRouteImport
-      parentRoute: typeof LayoutRoute
+      parentRoute: typeof LayoutPublicRoute
+    }
+    '/_layout/_protected/posts/$postId': {
+      id: '/_layout/_protected/posts/$postId'
+      path: '/posts/$postId'
+      fullPath: '/posts/$postId'
+      preLoaderRoute: typeof LayoutProtectedPostsPostIdRouteImport
+      parentRoute: typeof LayoutProtectedRoute
     }
   }
 }
 
-interface LayoutRouteChildren {
-  LayoutAboutRoute: typeof LayoutAboutRoute
-  LayoutIndexRoute: typeof LayoutIndexRoute
+interface LayoutProtectedRouteChildren {
+  LayoutProtectedPostsPostIdRoute: typeof LayoutProtectedPostsPostIdRoute
+}
+
+const LayoutProtectedRouteChildren: LayoutProtectedRouteChildren = {
+  LayoutProtectedPostsPostIdRoute: LayoutProtectedPostsPostIdRoute,
+}
+
+const LayoutProtectedRouteWithChildren = LayoutProtectedRoute._addFileChildren(
+  LayoutProtectedRouteChildren,
+)
+
+interface LayoutPublicRouteChildren {
   LayoutPublicSignInRoute: typeof LayoutPublicSignInRoute
   LayoutPublicSignUpRoute: typeof LayoutPublicSignUpRoute
-  LayoutPostsPostIdRoute: typeof LayoutPostsPostIdRoute
+}
+
+const LayoutPublicRouteChildren: LayoutPublicRouteChildren = {
+  LayoutPublicSignInRoute: LayoutPublicSignInRoute,
+  LayoutPublicSignUpRoute: LayoutPublicSignUpRoute,
+}
+
+const LayoutPublicRouteWithChildren = LayoutPublicRoute._addFileChildren(
+  LayoutPublicRouteChildren,
+)
+
+interface LayoutRouteChildren {
+  LayoutProtectedRoute: typeof LayoutProtectedRouteWithChildren
+  LayoutPublicRoute: typeof LayoutPublicRouteWithChildren
+  LayoutAboutRoute: typeof LayoutAboutRoute
+  LayoutIndexRoute: typeof LayoutIndexRoute
 }
 
 const LayoutRouteChildren: LayoutRouteChildren = {
+  LayoutProtectedRoute: LayoutProtectedRouteWithChildren,
+  LayoutPublicRoute: LayoutPublicRouteWithChildren,
   LayoutAboutRoute: LayoutAboutRoute,
   LayoutIndexRoute: LayoutIndexRoute,
-  LayoutPublicSignInRoute: LayoutPublicSignInRoute,
-  LayoutPublicSignUpRoute: LayoutPublicSignUpRoute,
-  LayoutPostsPostIdRoute: LayoutPostsPostIdRoute,
 }
 
 const LayoutRouteWithChildren =
