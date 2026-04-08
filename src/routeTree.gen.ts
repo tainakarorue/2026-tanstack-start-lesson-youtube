@@ -13,7 +13,10 @@ import { Route as LayoutRouteImport } from './routes/_layout'
 import { Route as LayoutIndexRouteImport } from './routes/_layout/index'
 import { Route as LayoutAboutRouteImport } from './routes/_layout/about'
 import { Route as ApiTrpcSplatRouteImport } from './routes/api/trpc.$'
+import { Route as ApiAuthSplatRouteImport } from './routes/api/auth.$'
 import { Route as LayoutPostsPostIdRouteImport } from './routes/_layout/posts/$postId'
+import { Route as LayoutPublicSignUpRouteImport } from './routes/_layout/_public/sign-up'
+import { Route as LayoutPublicSignInRouteImport } from './routes/_layout/_public/sign-in'
 
 const LayoutRoute = LayoutRouteImport.update({
   id: '/_layout',
@@ -34,22 +37,43 @@ const ApiTrpcSplatRoute = ApiTrpcSplatRouteImport.update({
   path: '/api/trpc/$',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
+  id: '/api/auth/$',
+  path: '/api/auth/$',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LayoutPostsPostIdRoute = LayoutPostsPostIdRouteImport.update({
   id: '/posts/$postId',
   path: '/posts/$postId',
+  getParentRoute: () => LayoutRoute,
+} as any)
+const LayoutPublicSignUpRoute = LayoutPublicSignUpRouteImport.update({
+  id: '/_public/sign-up',
+  path: '/sign-up',
+  getParentRoute: () => LayoutRoute,
+} as any)
+const LayoutPublicSignInRoute = LayoutPublicSignInRouteImport.update({
+  id: '/_public/sign-in',
+  path: '/sign-in',
   getParentRoute: () => LayoutRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof LayoutIndexRoute
   '/about': typeof LayoutAboutRoute
+  '/sign-in': typeof LayoutPublicSignInRoute
+  '/sign-up': typeof LayoutPublicSignUpRoute
   '/posts/$postId': typeof LayoutPostsPostIdRoute
+  '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/trpc/$': typeof ApiTrpcSplatRoute
 }
 export interface FileRoutesByTo {
   '/about': typeof LayoutAboutRoute
   '/': typeof LayoutIndexRoute
+  '/sign-in': typeof LayoutPublicSignInRoute
+  '/sign-up': typeof LayoutPublicSignUpRoute
   '/posts/$postId': typeof LayoutPostsPostIdRoute
+  '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/trpc/$': typeof ApiTrpcSplatRoute
 }
 export interface FileRoutesById {
@@ -57,25 +81,46 @@ export interface FileRoutesById {
   '/_layout': typeof LayoutRouteWithChildren
   '/_layout/about': typeof LayoutAboutRoute
   '/_layout/': typeof LayoutIndexRoute
+  '/_layout/_public/sign-in': typeof LayoutPublicSignInRoute
+  '/_layout/_public/sign-up': typeof LayoutPublicSignUpRoute
   '/_layout/posts/$postId': typeof LayoutPostsPostIdRoute
+  '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/trpc/$': typeof ApiTrpcSplatRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/about' | '/posts/$postId' | '/api/trpc/$'
+  fullPaths:
+    | '/'
+    | '/about'
+    | '/sign-in'
+    | '/sign-up'
+    | '/posts/$postId'
+    | '/api/auth/$'
+    | '/api/trpc/$'
   fileRoutesByTo: FileRoutesByTo
-  to: '/about' | '/' | '/posts/$postId' | '/api/trpc/$'
+  to:
+    | '/about'
+    | '/'
+    | '/sign-in'
+    | '/sign-up'
+    | '/posts/$postId'
+    | '/api/auth/$'
+    | '/api/trpc/$'
   id:
     | '__root__'
     | '/_layout'
     | '/_layout/about'
     | '/_layout/'
+    | '/_layout/_public/sign-in'
+    | '/_layout/_public/sign-up'
     | '/_layout/posts/$postId'
+    | '/api/auth/$'
     | '/api/trpc/$'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   LayoutRoute: typeof LayoutRouteWithChildren
+  ApiAuthSplatRoute: typeof ApiAuthSplatRoute
   ApiTrpcSplatRoute: typeof ApiTrpcSplatRoute
 }
 
@@ -109,11 +154,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiTrpcSplatRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/auth/$': {
+      id: '/api/auth/$'
+      path: '/api/auth/$'
+      fullPath: '/api/auth/$'
+      preLoaderRoute: typeof ApiAuthSplatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_layout/posts/$postId': {
       id: '/_layout/posts/$postId'
       path: '/posts/$postId'
       fullPath: '/posts/$postId'
       preLoaderRoute: typeof LayoutPostsPostIdRouteImport
+      parentRoute: typeof LayoutRoute
+    }
+    '/_layout/_public/sign-up': {
+      id: '/_layout/_public/sign-up'
+      path: '/sign-up'
+      fullPath: '/sign-up'
+      preLoaderRoute: typeof LayoutPublicSignUpRouteImport
+      parentRoute: typeof LayoutRoute
+    }
+    '/_layout/_public/sign-in': {
+      id: '/_layout/_public/sign-in'
+      path: '/sign-in'
+      fullPath: '/sign-in'
+      preLoaderRoute: typeof LayoutPublicSignInRouteImport
       parentRoute: typeof LayoutRoute
     }
   }
@@ -122,12 +188,16 @@ declare module '@tanstack/react-router' {
 interface LayoutRouteChildren {
   LayoutAboutRoute: typeof LayoutAboutRoute
   LayoutIndexRoute: typeof LayoutIndexRoute
+  LayoutPublicSignInRoute: typeof LayoutPublicSignInRoute
+  LayoutPublicSignUpRoute: typeof LayoutPublicSignUpRoute
   LayoutPostsPostIdRoute: typeof LayoutPostsPostIdRoute
 }
 
 const LayoutRouteChildren: LayoutRouteChildren = {
   LayoutAboutRoute: LayoutAboutRoute,
   LayoutIndexRoute: LayoutIndexRoute,
+  LayoutPublicSignInRoute: LayoutPublicSignInRoute,
+  LayoutPublicSignUpRoute: LayoutPublicSignUpRoute,
   LayoutPostsPostIdRoute: LayoutPostsPostIdRoute,
 }
 
@@ -136,6 +206,7 @@ const LayoutRouteWithChildren =
 
 const rootRouteChildren: RootRouteChildren = {
   LayoutRoute: LayoutRouteWithChildren,
+  ApiAuthSplatRoute: ApiAuthSplatRoute,
   ApiTrpcSplatRoute: ApiTrpcSplatRoute,
 }
 export const routeTree = rootRouteImport
